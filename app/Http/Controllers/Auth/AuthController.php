@@ -49,32 +49,38 @@ class AuthController extends Controller
         }
     }
 
-    public function login(LoginRequest $request): JsonResponse
-    {
-        $credentials = $request->only('email', 'password');
-
-        $user = User::where('email', $credentials['email'])->first();
-
-        if (!$user) {
+    public function login(LoginRequest $request): JsonResponse {
+        try {
+            $credentials = $request->only('email', 'password');
+            
+            $user = User::where('email', $credentials['email'])->first();
+            
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Invalid credentials',
+                ], 401);
+            }
+            
+            if (!Hash::check($credentials['password'], $user->password)) {
+                return response()->json([
+                    'message' => 'Invalid credentials',
+                ], 401);
+            }
+            
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
             return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
-
-        if (!Hash::check($credentials['password'], $user->password)) {
+                'message' => 'Login successful',
+                'user' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
+                'message' => 'Login failed',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ], 200);
     }
 
     public function logout(Request $request): JsonResponse {
