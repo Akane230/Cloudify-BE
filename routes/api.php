@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public auth routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])/*->middleware('throttle:5,1'). I removed it for testing purposes*/;
 
 // Protected auth routes
 Route::middleware('auth:sanctum')->group(function () {
