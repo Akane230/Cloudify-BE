@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->integer('phone_number');
+            $table->string('phone_number', 15);
             $table->string('password');
             $table->string('display_name');
             $table->text('profile_picture_url');
             $table->text('bio')->nullable();
-            $table->string('status');
-            $table->timestamp('last_seen');
+            $table->string('status')->default('active');
+            $table->timestamp('last_seen')->nullable();
             $table->timestamps();
         });
         
