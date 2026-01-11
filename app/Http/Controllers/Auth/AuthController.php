@@ -24,10 +24,11 @@ class AuthController extends Controller
             $user = User::create([
                 'username' => $validated['username'],
                 'email' => $validated['email'],
-                'display_name' => $validated['display_name'],
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
                 'phone_number' => $validated['phone_number'] ?? '',
                 'password' => Hash::make($validated['password']),
-                'profile_picture_url' => '',
+                'profile_picture_url' => $validated['profile_picture_url'] ?? '',
                 'status' => 'active',
             ]);
 
