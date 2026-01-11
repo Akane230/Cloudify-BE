@@ -16,7 +16,8 @@ class User extends Authenticatable
         'email', 
         'phone_number', 
         'password', 
-        'display_name', 
+        'first_name',
+        'last_name',
         'profile_picture_url', 
         'bio',
         'status',
@@ -37,5 +38,12 @@ class User extends Authenticatable
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'created_by', 'id');
+    }
+
+    protected $appends = ['display_name'];
+
+    public function getDisplayNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }
